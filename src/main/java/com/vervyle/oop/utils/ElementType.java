@@ -4,5 +4,6 @@ public enum ElementType {
     CCircle,
     SSquare,
     HHexagon,
-    TTriangle
+    TTriangle,
+    PPentagon
 }

@@ -35,6 +35,9 @@ public class ElementFactoryImpl implements ElementFactory {
         if (elementType.name().equals("TTriangle")) {
             return new RegularPolygon(radius, center, color, 3);
         }
+        if (elementType.name().equals(("PPentagon"))) {
+            return new RegularPolygon(radius, center, color, 5);
+        }
         throw new UnsupportedOperationException();
     }
 

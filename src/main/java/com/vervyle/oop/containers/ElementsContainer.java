@@ -19,8 +19,6 @@ public class ElementsContainer {
     public void addElementAsLast(Element element) {
         Objects.requireNonNull(element);
         allElements.add(element);
-        deselectAll();
-        selectLastElement();
     }
 
     public void removeElement(Element element) {

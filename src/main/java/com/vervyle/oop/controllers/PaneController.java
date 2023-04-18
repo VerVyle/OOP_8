@@ -30,6 +30,8 @@ public class PaneController {
         Element element = elementFactory.createElement(center, radius, color, elementType);
         element.show(pane);
         elementsContainer.addElementAsLast(element);
+        elementsContainer.deselectAll();
+        elementsContainer.selectLastElement();
     }
 
     public void deleteElement(Element element) {
@@ -53,7 +55,6 @@ public class PaneController {
         elementsContainer.deselectAll();
     }
 
-    // TODO: 17.04.2023 aesiufas
     public void groupSelected() {
         MyList<Element> selected = elementsContainer.getSelectedElements();
         Iterator<Element> iterator = selected.iterator();
@@ -67,6 +68,8 @@ public class PaneController {
             elementsContainer.removeElement(element);
         }
         elementsContainer.addElementAsLast(group);
+        elementsContainer.deselectAll();
+        elementsContainer.selectLastElement();
     }
 
     public void moveSelected(double deltaX, double deltaY) {
@@ -96,5 +99,23 @@ public class PaneController {
     }
 
     public void deGroupSelected() {
+        MyList<Element> selected = elementsContainer.getSelectedElements();
+        Iterator<Element> iterator = selected.iterator();
+        Element element;
+        GGroup group;
+        MyList<Element> children;
+        Iterator<Element> childIterator;
+        while (iterator.hasNext()) {
+            element = iterator.next();
+            if (element instanceof GGroup) {
+                group = (GGroup) element;
+                children = group.getChildren();
+                childIterator = children.iterator();
+                while (childIterator.hasNext()) {
+                    elementsContainer.addElementAsLast(childIterator.next());
+                }
+                elementsContainer.removeElement(element);
+            }
+        }
     }
 }

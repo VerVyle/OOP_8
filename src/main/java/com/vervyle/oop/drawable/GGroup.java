@@ -14,6 +14,10 @@ public class GGroup extends Element {
 
     private MyList<Element> children;
 
+    public MyList<Element> getChildren() {
+        return children;
+    }
+
     public GGroup() {
         children = new MyLinkedList<>();
     }
@@ -46,6 +50,7 @@ public class GGroup extends Element {
 
     @Override
     public void select() {
+        super.select();
         Iterator<Element> iterator = children.iterator();
         while (iterator.hasNext()) {
             iterator.next().select();
@@ -54,6 +59,7 @@ public class GGroup extends Element {
 
     @Override
     public void deselect() {
+        super.deselect();
         Iterator<Element> iterator = children.iterator();
         while (iterator.hasNext()) {
             iterator.next().deselect();
