@@ -9,6 +9,7 @@ import com.vervyle.oop.factories.ElementFactory;
 import com.vervyle.oop.factories.ElementFactoryImpl;
 import com.vervyle.oop.utils.ElementType;
 import com.vervyle.oop.utils.Point2D;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;

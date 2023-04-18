@@ -4,14 +4,18 @@ import com.vervyle.oop.drawable.Element;
 import com.vervyle.oop.factories.ElementFactory;
 import com.vervyle.oop.factories.ElementFactoryImpl;
 import com.vervyle.oop.utils.Point2D;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.scene.layout.Pane;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
-public class ElementsContainer {
+public class ElementsContainer implements Observable {
 
     private final MyList<Element> allElements;
     private final MyList<Element> selectedElements;
@@ -19,17 +23,20 @@ public class ElementsContainer {
     public ElementsContainer() {
         allElements = new MyLinkedList<>();
         selectedElements = new MyLinkedList<>();
+        listeners = new LinkedList<>();
     }
 
     public void addElementAsLast(Element element) {
         Objects.requireNonNull(element);
         allElements.add(element);
+        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void removeElement(Element element) {
         Objects.requireNonNull(element);
         allElements.remove(element);
         selectedElements.remove(element);
+        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void removeAll() {
@@ -37,6 +44,7 @@ public class ElementsContainer {
         while (iterator.hasNext()) {
             removeElement(iterator.next());
         }
+        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void selectElement(Element element) {
@@ -45,6 +53,7 @@ public class ElementsContainer {
             return;
         element.select();
         selectedElements.add(element);
+        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void selectLastElement() {
@@ -53,10 +62,12 @@ public class ElementsContainer {
             return;
         }
         selectElement(element);
+        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void selectAll() {
         allElements.iterator().forEachRemaining(this::selectElement);
+        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void selectAll(Point2D point2D) {
@@ -67,6 +78,7 @@ public class ElementsContainer {
             if (element.intersects(point2D) && !element.isSelected())
                 selectElement(element);
         }
+        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void selectLast(Point2D point2D) {
@@ -79,6 +91,7 @@ public class ElementsContainer {
                 return;
             }
         }
+        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void deselectElement(Element element) {
@@ -87,6 +100,7 @@ public class ElementsContainer {
             return;
         element.deselect();
         selectedElements.remove(element);
+        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void deselectAll() {
@@ -94,6 +108,7 @@ public class ElementsContainer {
         while (iterator.hasNext()) {
             deselectElement(iterator.next());
         }
+        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public boolean anyCollision(Point2D point2D) {
@@ -107,6 +122,10 @@ public class ElementsContainer {
 
     public MyList<Element> getSelectedElements() {
         return selectedElements;
+    }
+
+    public MyList<Element> getAllElements() {
+        return allElements;
     }
 
     private JSONArray saveAll() {
@@ -141,10 +160,23 @@ public class ElementsContainer {
             addElementAsLast(element);
         }
         selectLastElement();
+        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void update(Pane pane) {
         pane.getChildren().clear();
         allElements.iterator().forEachRemaining(element -> element.show(pane));
+    }
+
+    private final List<InvalidationListener> listeners;
+
+    @Override
+    public void addListener(InvalidationListener invalidationListener) {
+        listeners.add(invalidationListener);
+    }
+
+    @Override
+    public void removeListener(InvalidationListener invalidationListener) {
+        listeners.add(invalidationListener);
     }
 }

@@ -50,7 +50,7 @@ public class PaintController implements Initializable {
     @FXML
     private Slider toolSlider;
     @FXML
-    private TreeView<?> treeView;
+    private TreeView<String> treeView;
     private PaneController paneController;
 
     public static final String PATH = "obj.json";
