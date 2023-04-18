@@ -11,14 +11,16 @@ import com.vervyle.oop.utils.ElementType;
 import com.vervyle.oop.utils.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import org.json.JSONObject;
 
+import java.io.*;
 import java.util.Iterator;
 
 public class PaneController {
 
-    private Pane pane;
-    private ElementFactory elementFactory;
-    private ElementsContainer elementsContainer;
+    private final Pane pane;
+    private final ElementFactory elementFactory;
+    private final ElementsContainer elementsContainer;
 
     public PaneController(Pane pane) {
         elementFactory = new ElementFactoryImpl();
@@ -92,8 +94,7 @@ public class PaneController {
         Element element;
         while (iterator.hasNext()) {
             element = iterator.next();
-            element.hide(pane);
-            elementsContainer.removeElement(element);
+            deleteElement(element);
         }
         elementsContainer.selectLastElement();
     }
@@ -109,13 +110,44 @@ public class PaneController {
             element = iterator.next();
             if (element instanceof GGroup) {
                 group = (GGroup) element;
+                group.deselect();
                 children = group.getChildren();
                 childIterator = children.iterator();
+                Element child;
                 while (childIterator.hasNext()) {
-                    elementsContainer.addElementAsLast(childIterator.next());
+                    child = childIterator.next();
+                    elementsContainer.addElementAsLast(child);
+                    elementsContainer.selectElement(child);
                 }
                 elementsContainer.removeElement(element);
             }
+        }
+    }
+
+    public void saveAll(String path) {
+        JSONObject jsonContainer = elementsContainer.save();
+        try {
+            FileWriter fileWriter = new FileWriter(path);
+            fileWriter.write(jsonContainer.toString());
+            fileWriter.close();
+        } catch (Exception e) {
+            System.out.println("Cannot save elements: " + e.getMessage());
+        }
+        System.out.println("Saved to " + path + ": " + jsonContainer.toString());
+    }
+
+    public void loadAll(String path) {
+        String str;
+        JSONObject jsonContainer;
+        try {
+            FileReader fileReader = new FileReader(path);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            str = bufferedReader.readLine();
+            jsonContainer = new JSONObject(str);
+            elementsContainer.load(jsonContainer);
+            elementsContainer.update(pane);
+        } catch (Exception e) {
+            System.out.println("Cannot load from file + " + path + ": " + e.getMessage());
         }
     }
 }

@@ -27,10 +27,12 @@
             <contextMenu>
                 <ContextMenu>
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Выделить всё" onAction="#selectAll"/>
-                        <MenuItem mnemonicParsing="false" text="Очистить выделение" onAction="#deselectAll"/>
-                        <MenuItem mnemonicParsing="false" text="Сгруппировать" onAction="#groupSelected"/>
-                        <MenuItem mnemonicParsing="false" text="Разгруппировать" onAction="#deGroupSelected"/>
+                        <MenuItem mnemonicParsing="false" onAction="#selectAll" text="Выделить всё"/>
+                        <MenuItem mnemonicParsing="false" onAction="#deselectAll" text="Очистить выделение"/>
+                        <MenuItem mnemonicParsing="false" onAction="#groupSelected" text="Сгруппировать"/>
+                        <MenuItem mnemonicParsing="false" onAction="#deGroupSelected" text="Разгруппировать"/>
+                        <MenuItem mnemonicParsing="false" onAction="#resizeSelected"
+                                  text="Изменить размер у выделенных объектов"/>
                     </items>
                 </ContextMenu>
             </contextMenu>
@@ -51,12 +53,12 @@
                                         <Separator prefWidth="200.0"/>
                                     </graphic>
                                 </MenuItem>
-                                <MenuItem fx:id="menuSave" mnemonicParsing="false" text="Open">
+                                <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#saveAll" text="Save">
                                     <graphic>
                                         <Separator prefWidth="200.0"/>
                                     </graphic>
                                 </MenuItem>
-                                <MenuItem fx:id="menuLoad" mnemonicParsing="false" text="Load"/>
+                                <MenuItem fx:id="menuLoad" mnemonicParsing="false" text="Load" onAction="#loadAll"/>
                             </items>
                         </Menu>
                     </menus>

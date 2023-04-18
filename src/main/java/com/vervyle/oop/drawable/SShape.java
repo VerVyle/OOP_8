@@ -4,6 +4,8 @@ import com.vervyle.oop.utils.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public abstract class SShape extends Element {
     protected double radius;
@@ -15,6 +17,10 @@ public abstract class SShape extends Element {
         this.radius = radius;
         this.center = center;
         this.color = color;
+    }
+
+    public SShape(JSONObject jsonObject) {
+        load(jsonObject);
     }
 
     @Override
@@ -91,5 +97,34 @@ public abstract class SShape extends Element {
     public final void deselect() {
         super.deselect();
         shape.setStyle("-fx-stroke: #000000; -fx-stroke-width: 3px");
+    }
+
+    @Override
+    public JSONObject save() {
+        JSONObject jsonThis = super.save();
+        JSONArray jsonColor = new JSONArray()
+                .put(color.getRed())
+                .put(color.getGreen())
+                .put(color.getBlue());
+        JSONArray jsonCenter = new JSONArray()
+                .put(center.x())
+                .put(center.y());
+        jsonThis.put("radius", radius)
+                .put("center", jsonCenter)
+                .put("color", jsonColor);
+        return jsonThis;
+    }
+
+    @Override
+    public void load(JSONObject jsonObject) {
+        radius = jsonObject.getDouble("radius");
+        double b0, b1, b2;
+        b0 = jsonObject.getJSONArray("center").getDouble(0);
+        b1 = jsonObject.getJSONArray("center").getDouble(1);
+        center = new Point2D(b0, b1);
+        b0 = jsonObject.getJSONArray("color").getDouble(0);
+        b1 = jsonObject.getJSONArray("color").getDouble(1);
+        b2 = jsonObject.getJSONArray("color").getDouble(2);
+        color = new Color(b0, b1, b2, 1);
     }
 }

@@ -1,10 +1,14 @@
 package com.vervyle.oop.drawable;
 
+import com.vervyle.oop.utils.Copyable;
+import com.vervyle.oop.utils.Loadable;
 import com.vervyle.oop.utils.Point2D;
+import com.vervyle.oop.utils.Savable;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import org.json.JSONObject;
 
-public abstract class Element {
+public abstract class Element implements Copyable, Savable, Loadable {
 
     protected boolean selected;
 
@@ -39,4 +43,10 @@ public abstract class Element {
     public abstract void updateShape(Pane pane);
 
     public abstract boolean isOutOfPane(Pane pane);
+
+    @Override
+    public JSONObject save() {
+        return new JSONObject()
+                .put("type", this.getClass().getSimpleName());
+    }
 }

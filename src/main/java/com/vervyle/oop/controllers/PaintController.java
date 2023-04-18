@@ -2,7 +2,6 @@ package com.vervyle.oop.controllers;
 
 import com.vervyle.oop.utils.ElementType;
 import com.vervyle.oop.utils.Point2D;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
@@ -54,6 +53,8 @@ public class PaintController implements Initializable {
     private TreeView<?> treeView;
     private PaneController paneController;
 
+    public static final String PATH = "obj.json";
+
     private double getDouble() {
         return toolSlider.getValue();
     }
@@ -81,6 +82,21 @@ public class PaintController implements Initializable {
     @FXML
     private void deGroupSelected() {
         paneController.deGroupSelected();
+    }
+
+    @FXML
+    private void resizeSelected() {
+        paneController.resizeSelected(getDouble());
+    }
+
+    @FXML
+    private void saveAll() {
+        paneController.saveAll(PATH);
+    }
+
+    @FXML
+    private void loadAll() {
+        paneController.loadAll(PATH);
     }
 
     @Override
