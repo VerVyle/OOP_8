@@ -175,6 +175,10 @@ public class ElementsContainer implements Observable {
     }
 
     public void updateSelection(List<Integer> selectedIndices) {
+        if (selectedIndices.contains(0)) {
+            selectAll();
+            return;
+        }
         int index = 1;
         Iterator<Element> iterator = allElements.iterator();
         Element element;
@@ -185,8 +189,7 @@ public class ElementsContainer implements Observable {
             } else {
                 deselectElement(element);
             }
-            if (element instanceof GGroup) {
-                GGroup group = ((GGroup) element);
+            if (element instanceof GGroup group) {
                 index += group.getChildren().size();
             }
             index++;

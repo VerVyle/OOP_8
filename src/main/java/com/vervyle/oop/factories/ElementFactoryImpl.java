@@ -57,12 +57,15 @@ public class ElementFactoryImpl implements ElementFactory {
             case TTriangle -> {
                 return new RegularPolygon(radius, center, color, 3);
             }
+            case SStar -> {
+                return new SStar(radius, center, color, 6);
+            }
             default -> throw new UnsupportedOperationException();
         }
     }
 
     @Override
     public Element createElement(MyList<Element> children) {
-        return null;
+        return new GGroup(children);
     }
 }

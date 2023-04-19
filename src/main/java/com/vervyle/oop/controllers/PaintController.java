@@ -2,6 +2,7 @@ package com.vervyle.oop.controllers;
 
 import com.vervyle.oop.utils.ElementType;
 import com.vervyle.oop.utils.Point2D;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -100,6 +101,16 @@ public class PaintController implements Initializable {
         paneController.loadAll(PATH);
     }
 
+    @FXML
+    private void close() {
+        paneController.deleteAll();
+    }
+
+    @FXML
+    public void colorizeSelected() {
+        paneController.colorizeSelected(toolColor.getValue());
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initList();
@@ -135,6 +146,4 @@ public class PaintController implements Initializable {
             }
         });
     }
-
-
 }

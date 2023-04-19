@@ -2,6 +2,8 @@ package com.vervyle.oop.drawable;
 
 import com.vervyle.oop.containers.MyLinkedList;
 import com.vervyle.oop.containers.MyList;
+import com.vervyle.oop.factories.ElementFactory;
+import com.vervyle.oop.factories.ElementFactoryImpl;
 import com.vervyle.oop.utils.Copyable;
 import com.vervyle.oop.utils.Point2D;
 import javafx.scene.layout.Pane;
@@ -26,6 +28,7 @@ public class GGroup extends Element {
     public GGroup(JSONObject jsonObject) {
         this();
         load(jsonObject);
+        deselect();
     }
 
     public GGroup(MyList<Element> children) {
@@ -162,7 +165,16 @@ public class GGroup extends Element {
 
     @Override
     public void load(JSONObject jsonObject) {
-        throw new UnsupportedOperationException();
+        JSONArray jsonChildren = jsonObject.getJSONArray("children");
+        ElementFactory elementFactory = new ElementFactoryImpl();
+        JSONObject jsonChild;
+        Element element;
+        Iterator<Object> iterator = jsonChildren.iterator();
+        while (iterator.hasNext()) {
+            jsonChild = ((JSONObject) iterator.next());
+            element = elementFactory.createElement(jsonChild);
+            children.add(element);
+        }
     }
 
     @Override

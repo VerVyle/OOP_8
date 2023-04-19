@@ -35,6 +35,10 @@ public class PaneController {
 
     public void addElement(Point2D center, double radius, Color color, ElementType elementType) {
         Element element = elementFactory.createElement(center, radius, color, elementType);
+        if (element.isOutOfPane(pane)) {
+            System.out.println("Cannot add element: " + element);
+            return;
+        }
         element.show(pane);
         elementsContainer.addElementAsLast(element);
         elementsContainer.deselectAll();
@@ -162,6 +166,17 @@ public class PaneController {
         } catch (Exception e) {
             System.out.println("Cannot load from file + " + path + ": " + e.getMessage());
         }
+        elementsContainer.notifyListeners();
+    }
+
+    public void colorizeSelected(Color color) {
+        MyList<Element> selectedElements = elementsContainer.getSelectedElements();
+        selectedElements.iterator().forEachRemaining(element -> element.setColor(pane, color));
+    }
+
+    public void deleteAll() {
+        elementsContainer.removeAll();
+        elementsContainer.update(pane);
         elementsContainer.notifyListeners();
     }
 }

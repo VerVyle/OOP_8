@@ -5,4 +5,5 @@ public enum ElementType {
     SSquare,
     HHexagon,
     TTriangle,
+    SStar
 }

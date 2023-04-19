@@ -20,6 +20,7 @@ public class RegularPolygon extends PPolygon {
     public RegularPolygon(JSONObject jsonObject) {
         super(jsonObject);
         createShape();
+        deselect();
     }
 
     @Override
@@ -48,6 +49,7 @@ public class RegularPolygon extends PPolygon {
 
     @Override
     public void load(JSONObject jsonObject) {
-        throw new UnsupportedOperationException();
+        super.load(jsonObject);
+        numOfVertices = jsonObject.getInt("numOfVertices");
     }
 }

@@ -1,7 +1,7 @@
 package com.vervyle.oop.containers;
 
 public class Node<E> {
-    E value;
+    final E value;
     Node<E> next;
     Node<E> prev;
 

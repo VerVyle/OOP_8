@@ -8,7 +8,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.control.TreeView?>
@@ -33,13 +33,30 @@
                         <MenuItem mnemonicParsing="false" onAction="#deGroupSelected" text="Разгруппировать"/>
                         <MenuItem mnemonicParsing="false" onAction="#resizeSelected"
                                   text="Изменить размер у выделенных объектов"/>
+                        <MenuItem mnemonicParsing="false" onAction="#colorizeSelected"
+                                  text="Изменить цвет у выделенных объектов"/>
                     </items>
                 </ContextMenu>
             </contextMenu>
         </ScrollPane>
     </center>
     <right>
-        <TreeView fx:id="treeView" BorderPane.alignment="CENTER"/>
+        <TreeView fx:id="treeView" BorderPane.alignment="CENTER">
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#selectAll" text="Выделить всё"/>
+                        <MenuItem mnemonicParsing="false" onAction="#deselectAll" text="Очистить выделение"/>
+                        <MenuItem mnemonicParsing="false" onAction="#groupSelected" text="Сгруппировать"/>
+                        <MenuItem mnemonicParsing="false" onAction="#deGroupSelected" text="Разгруппировать"/>
+                        <MenuItem mnemonicParsing="false" onAction="#resizeSelected"
+                                  text="Изменить размер у выделенных объектов"/>
+                        <MenuItem mnemonicParsing="false" onAction="#colorizeSelected"
+                                  text="Изменить цвет у выделенных объектов"/>
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+        </TreeView>
     </right>
     <top>
         <VBox BorderPane.alignment="CENTER">
@@ -48,17 +65,11 @@
                     <menus>
                         <Menu mnemonicParsing="false" text="File">
                             <items>
-                                <MenuItem fx:id="menuNew" mnemonicParsing="false" text="New">
-                                    <graphic>
-                                        <Separator prefWidth="200.0"/>
-                                    </graphic>
-                                </MenuItem>
-                                <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#saveAll" text="Save">
-                                    <graphic>
-                                        <Separator prefWidth="200.0"/>
-                                    </graphic>
-                                </MenuItem>
-                                <MenuItem fx:id="menuLoad" mnemonicParsing="false" text="Load" onAction="#loadAll"/>
+                                <MenuItem fx:id="menuNew" mnemonicParsing="false" text="Close" onAction="#close"/>
+                                <SeparatorMenuItem mnemonicParsing="false"/>
+                                <MenuItem fx:id="menuSave" mnemonicParsing="false" onAction="#saveAll" text="Save"/>
+                                <SeparatorMenuItem mnemonicParsing="false"/>
+                                <MenuItem fx:id="menuLoad" mnemonicParsing="false" onAction="#loadAll" text="Load"/>
                             </items>
                         </Menu>
                     </menus>

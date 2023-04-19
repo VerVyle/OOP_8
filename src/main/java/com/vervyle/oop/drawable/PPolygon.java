@@ -17,12 +17,6 @@ public abstract class PPolygon extends SShape {
 
     public PPolygon(JSONObject jsonObject) {
         super(jsonObject);
-    }
-
-    @Override
-    public JSONObject save() {
-        JSONObject jsonThis = super.save();
-        jsonThis.put("vertices", vertices);
-        return jsonThis;
+        verticesHelper = new VerticesHelper();
     }
 }
