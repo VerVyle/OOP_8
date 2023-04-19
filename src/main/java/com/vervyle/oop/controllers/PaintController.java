@@ -4,13 +4,7 @@ import com.vervyle.oop.utils.ElementType;
 import com.vervyle.oop.utils.Point2D;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ColorPicker;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -64,6 +58,13 @@ public class PaintController implements Initializable {
         toolElements.getSelectionModel().select(0);
     }
 
+    private void initTree() {
+        MultipleSelectionModel<TreeItem<String>> selectionModel = treeView.getSelectionModel();
+        selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
+        TreeItem<String> root = new TreeItem<>("container");
+        treeView.setRoot(root);
+    }
+
     @FXML
     private void selectAll() {
         paneController.selectAll();
@@ -102,7 +103,8 @@ public class PaintController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initList();
-        paneController = new PaneController(mainDrawPane);
+        initTree();
+        paneController = new PaneController(mainDrawPane, treeView);
         mainDrawPane.setOnMouseClicked(mouseEvent -> {
             if (!mouseEvent.getButton().equals(MouseButton.PRIMARY))
                 return;

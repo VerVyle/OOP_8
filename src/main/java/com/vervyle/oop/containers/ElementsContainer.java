@@ -1,6 +1,7 @@
 package com.vervyle.oop.containers;
 
 import com.vervyle.oop.drawable.Element;
+import com.vervyle.oop.drawable.GGroup;
 import com.vervyle.oop.factories.ElementFactory;
 import com.vervyle.oop.factories.ElementFactoryImpl;
 import com.vervyle.oop.utils.Point2D;
@@ -29,14 +30,12 @@ public class ElementsContainer implements Observable {
     public void addElementAsLast(Element element) {
         Objects.requireNonNull(element);
         allElements.add(element);
-        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void removeElement(Element element) {
         Objects.requireNonNull(element);
         allElements.remove(element);
         selectedElements.remove(element);
-        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void removeAll() {
@@ -44,7 +43,6 @@ public class ElementsContainer implements Observable {
         while (iterator.hasNext()) {
             removeElement(iterator.next());
         }
-        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void selectElement(Element element) {
@@ -53,7 +51,6 @@ public class ElementsContainer implements Observable {
             return;
         element.select();
         selectedElements.add(element);
-        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void selectLastElement() {
@@ -62,12 +59,10 @@ public class ElementsContainer implements Observable {
             return;
         }
         selectElement(element);
-        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void selectAll() {
         allElements.iterator().forEachRemaining(this::selectElement);
-        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void selectAll(Point2D point2D) {
@@ -78,7 +73,6 @@ public class ElementsContainer implements Observable {
             if (element.intersects(point2D) && !element.isSelected())
                 selectElement(element);
         }
-        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void selectLast(Point2D point2D) {
@@ -91,7 +85,6 @@ public class ElementsContainer implements Observable {
                 return;
             }
         }
-        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void deselectElement(Element element) {
@@ -100,7 +93,6 @@ public class ElementsContainer implements Observable {
             return;
         element.deselect();
         selectedElements.remove(element);
-        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void deselectAll() {
@@ -108,7 +100,6 @@ public class ElementsContainer implements Observable {
         while (iterator.hasNext()) {
             deselectElement(iterator.next());
         }
-        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public boolean anyCollision(Point2D point2D) {
@@ -160,7 +151,6 @@ public class ElementsContainer implements Observable {
             addElementAsLast(element);
         }
         selectLastElement();
-        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
     public void update(Pane pane) {
@@ -178,5 +168,28 @@ public class ElementsContainer implements Observable {
     @Override
     public void removeListener(InvalidationListener invalidationListener) {
         listeners.add(invalidationListener);
+    }
+
+    public void notifyListeners() {
+        listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
+    }
+
+    public void updateSelection(List<Integer> selectedIndices) {
+        int index = 1;
+        Iterator<Element> iterator = allElements.iterator();
+        Element element;
+        while (iterator.hasNext()) {
+            element = iterator.next();
+            if (selectedIndices.contains(index)) {
+                selectElement(element);
+            } else {
+                deselectElement(element);
+            }
+            if (element instanceof GGroup) {
+                GGroup group = ((GGroup) element);
+                index += group.getChildren().size();
+            }
+            index++;
+        }
     }
 }

@@ -23,10 +23,14 @@ public class PaneController {
     private final ElementFactory elementFactory;
     private final ElementsContainer elementsContainer;
 
-    public PaneController(Pane pane) {
+    public PaneController(Pane pane, TreeView<String> treeView) {
+        this.pane = pane;
         elementFactory = new ElementFactoryImpl();
         elementsContainer = new ElementsContainer();
-        this.pane = pane;
+        TreeController treeController = new TreeController(treeView);
+        elementsContainer.addListener(treeController);
+
+        treeView.setOnMouseClicked(mouseEvent -> elementsContainer.updateSelection(treeView.getSelectionModel().getSelectedIndices().stream().toList()));
     }
 
     public void addElement(Point2D center, double radius, Color color, ElementType elementType) {
@@ -35,6 +39,7 @@ public class PaneController {
         elementsContainer.addElementAsLast(element);
         elementsContainer.deselectAll();
         elementsContainer.selectLastElement();
+        elementsContainer.notifyListeners();
     }
 
     public void deleteElement(Element element) {
@@ -44,18 +49,22 @@ public class PaneController {
 
     public void selectAll(Point2D point2D) {
         elementsContainer.selectAll(point2D);
+        elementsContainer.notifyListeners();
     }
 
     public void selectAll() {
         elementsContainer.selectAll();
+        elementsContainer.notifyListeners();
     }
 
     public void selectLast(Point2D point2D) {
         elementsContainer.selectLast(point2D);
+        elementsContainer.notifyListeners();
     }
 
     public void deselectAll() {
         elementsContainer.deselectAll();
+        elementsContainer.notifyListeners();
     }
 
     public void groupSelected() {
@@ -73,6 +82,7 @@ public class PaneController {
         elementsContainer.addElementAsLast(group);
         elementsContainer.deselectAll();
         elementsContainer.selectLastElement();
+        elementsContainer.notifyListeners();
     }
 
     public void moveSelected(double deltaX, double deltaY) {
@@ -98,6 +108,7 @@ public class PaneController {
             deleteElement(element);
         }
         elementsContainer.selectLastElement();
+        elementsContainer.notifyListeners();
     }
 
     public void deGroupSelected() {
@@ -123,6 +134,7 @@ public class PaneController {
                 elementsContainer.removeElement(element);
             }
         }
+        elementsContainer.notifyListeners();
     }
 
     public void saveAll(String path) {
@@ -150,5 +162,6 @@ public class PaneController {
         } catch (Exception e) {
             System.out.println("Cannot load from file + " + path + ": " + e.getMessage());
         }
+        elementsContainer.notifyListeners();
     }
 }

@@ -15,26 +15,51 @@ public class TreeController implements InvalidationListener {
 
     private final TreeView<String> treeView;
 
-    private static int INDEX = 0;
+    private static int index = 0;
 
     public TreeController(TreeView<String> treeView) {
         this.treeView = treeView;
     }
 
-    private void DFSprocessElement(TreeItem<String> parentNode, Element element) {
-        TreeItem<String> node;
+    private void DFSProcessElement(TreeItem<String> parentNode, Element element) {
+        TreeItem<String> node = new TreeItem<>(element.getClass().getSimpleName());
+        node.setExpanded(true);
+        parentNode.getChildren().add(node);
         if (!(element instanceof GGroup)) {
-            node = new TreeItem<>(element.getClass().getSimpleName());
-            parentNode.getChildren().add(node);
             return;
         }
         GGroup group = (GGroup) element;
         Element child;
-        node = new TreeItem<>(GGroup.class.getSimpleName());
         Iterator<Element> iterator = group.getChildren().iterator();
         while (iterator.hasNext()) {
             child = iterator.next();
-            DFSprocessElement(node, child);
+            DFSProcessElement(node, child);
+        }
+    }
+
+    private void DFSProcessSelection(Element element) {
+        if (element.isSelected()) {
+            treeView.getSelectionModel().select(index);
+        }
+        index++;
+        if (!(element instanceof GGroup)) {
+            return;
+        }
+        GGroup group = (GGroup) element;
+        Element child;
+        Iterator<Element> iterator = group.getChildren().iterator();
+        while (iterator.hasNext()) {
+            child = iterator.next();
+            DFSProcessSelection(child);
+        }
+    }
+
+    private void updateSelected(MyList<Element> allElements) {
+        index = 1;
+        treeView.getSelectionModel().clearSelection();
+        Iterator<Element> iterator = allElements.iterator();
+        while (iterator.hasNext()) {
+            DFSProcessSelection(iterator.next());
         }
     }
 
@@ -42,22 +67,16 @@ public class TreeController implements InvalidationListener {
         TreeItem<String> root = new TreeItem<>("container");
         Iterator<Element> iterator = allElements.iterator();
         while (iterator.hasNext()) {
-            DFSprocessElement(root, iterator.next());
+            DFSProcessElement(root, iterator.next());
         }
         treeView.setRoot(root);
-    }
-
-    private void getIndex(Element element) {
-
-    }
-
-    private void updateSelected(MyList<Element> selectedElements) {
-
+        root.setExpanded(true);
     }
 
     @Override
     public void invalidated(Observable observable) {
         ElementsContainer elementsContainer = (ElementsContainer) observable;
         updateTree(elementsContainer.getAllElements());
+        updateSelected(elementsContainer.getAllElements());
     }
 }
