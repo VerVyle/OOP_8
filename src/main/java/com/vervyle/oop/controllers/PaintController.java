@@ -1,5 +1,6 @@
 package com.vervyle.oop.controllers;
 
+import com.vervyle.oop.PaintApplication;
 import com.vervyle.oop.utils.ElementType;
 import com.vervyle.oop.utils.Point2D;
 import javafx.event.ActionEvent;
@@ -9,7 +10,10 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -93,12 +97,14 @@ public class PaintController implements Initializable {
 
     @FXML
     private void saveAll() {
-        paneController.saveAll(PATH);
+        File file = new FileChooser().showSaveDialog(PaintApplication.getStage());
+        paneController.saveAll(file.getAbsolutePath());
     }
 
     @FXML
     private void loadAll() {
-        paneController.loadAll(PATH);
+        File file = new FileChooser().showOpenDialog(PaintApplication.getStage());
+        paneController.loadAll(file.getAbsolutePath());
     }
 
     @FXML

@@ -169,9 +169,8 @@ public class GGroup extends Element {
         ElementFactory elementFactory = new ElementFactoryImpl();
         JSONObject jsonChild;
         Element element;
-        Iterator<Object> iterator = jsonChildren.iterator();
-        while (iterator.hasNext()) {
-            jsonChild = ((JSONObject) iterator.next());
+        for (Object child : jsonChildren) {
+            jsonChild = ((JSONObject) child);
             element = elementFactory.createElement(jsonChild);
             children.add(element);
         }
