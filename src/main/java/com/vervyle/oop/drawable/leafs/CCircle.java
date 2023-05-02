@@ -1,6 +1,7 @@
 package com.vervyle.oop.drawable.leafs;
 
-import com.vervyle.oop.utils.Copyable;
+import com.vervyle.oop.factories.ElementFactory;
+import com.vervyle.oop.drawable.utils.Copyable;
 import com.vervyle.oop.drawable.SShape;
 import com.vervyle.oop.utils.Point2D;
 import javafx.scene.paint.Color;
@@ -14,8 +15,8 @@ public class CCircle extends SShape {
         createShape();
     }
 
-    public CCircle(JSONObject jsonObject) {
-        super(jsonObject);
+    public CCircle(JSONObject jsonObject, ElementFactory elementFactory) {
+        super(jsonObject, elementFactory);
         createShape();
         deselect();
     }

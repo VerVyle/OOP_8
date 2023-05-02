@@ -1,19 +1,23 @@
 package com.vervyle.oop.drawable;
 
-import com.vervyle.oop.utils.Copyable;
-import com.vervyle.oop.utils.Loadable;
+import com.vervyle.oop.drawable.utils.*;
 import com.vervyle.oop.utils.Point2D;
-import com.vervyle.oop.utils.Savable;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
 
+import java.lang.reflect.Method;
+
 public abstract class Element implements Copyable, Savable, Loadable {
 
     protected boolean selected;
+    public StickyObservable stickyObservable;
+    public StickyObserver stickyObserver;
 
     public Element() {
         selected = false;
+        stickyObservable = new StickyObservable();
+        stickyObserver = new StickyObserver();
     }
 
     public final boolean isSelected() {
@@ -43,6 +47,8 @@ public abstract class Element implements Copyable, Savable, Loadable {
     public abstract void updateShape(Pane pane);
 
     public abstract boolean isOutOfPane(Pane pane);
+
+    public abstract Point2D getCenter();
 
     @Override
     public JSONObject save() {

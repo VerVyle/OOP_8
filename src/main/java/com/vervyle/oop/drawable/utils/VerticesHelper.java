@@ -1,4 +1,7 @@
-package com.vervyle.oop.utils;
+package com.vervyle.oop.drawable.utils;
+
+import com.vervyle.oop.utils.Point2D;
+import com.vervyle.oop.utils.Vector2D;
 
 public class VerticesHelper {
     public double[] calcVerticesForRegularPolygon(Point2D center, double radius, int numOfVertices) {

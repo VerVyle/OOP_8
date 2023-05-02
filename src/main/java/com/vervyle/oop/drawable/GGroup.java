@@ -3,8 +3,7 @@ package com.vervyle.oop.drawable;
 import com.vervyle.oop.containers.MyLinkedList;
 import com.vervyle.oop.containers.MyList;
 import com.vervyle.oop.factories.ElementFactory;
-import com.vervyle.oop.factories.ElementFactoryImpl;
-import com.vervyle.oop.utils.Copyable;
+import com.vervyle.oop.drawable.utils.Copyable;
 import com.vervyle.oop.utils.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -25,14 +24,29 @@ public class GGroup extends Element {
         children = new MyLinkedList<>();
     }
 
-    public GGroup(JSONObject jsonObject) {
+    public GGroup(JSONObject jsonObject, ElementFactory elementFactory) {
         this();
-        load(jsonObject);
+        load(jsonObject, elementFactory);
         deselect();
     }
 
     public GGroup(MyList<Element> children) {
         this.children = children;
+    }
+
+    @Override
+    public Point2D getCenter() {
+        double x = 0, y = 0;
+        Iterator<Element> iterator = children.iterator();
+        Element element;
+        while (iterator.hasNext()) {
+            element = iterator.next();
+            x += element.getCenter().x();
+            y += element.getCenter().y();
+        }
+        x /= children.size();
+        y /= children.size();
+        return new Point2D(x, y);
     }
 
     @Override
@@ -54,6 +68,24 @@ public class GGroup extends Element {
             current = iterator.next();
             current.show(pane);
         }
+    }
+
+    private Point2D getMaxDeltas() {
+        Iterator<Element> iterator = children.iterator();
+        Point2D center = getCenter();
+        double maxX = 0;
+        double maxY = 0;
+        Element element;
+        while (iterator.hasNext()) {
+            element = iterator.next();
+            double deltaX = element.getCenter().x() - center.x();
+            double deltaY = element.getCenter().y() - center.y();
+            if (deltaX > maxX)
+                maxX = deltaX;
+            if (deltaY > maxY)
+                maxY = deltaY;
+        }
+        return new Point2D(maxX, maxY);
     }
 
     @Override
@@ -129,6 +161,10 @@ public class GGroup extends Element {
                 return false;
             }
         }
+        stickyObservable.notifyObservers(pane, deltaX, deltaY);
+        updateShape(pane);
+        stickyObservable.showLines(pane, getCenter());
+        stickyObserver.changed(pane);
         return true;
     }
 
@@ -146,6 +182,7 @@ public class GGroup extends Element {
         while (iterator.hasNext()) {
             iterator.next().updateShape(pane);
         }
+        stickyObservable.showLines(pane, getCenter());
     }
 
     @Override
@@ -164,9 +201,8 @@ public class GGroup extends Element {
     }
 
     @Override
-    public void load(JSONObject jsonObject) {
+    public void load(JSONObject jsonObject, ElementFactory elementFactory) {
         JSONArray jsonChildren = jsonObject.getJSONArray("children");
-        ElementFactory elementFactory = new ElementFactoryImpl();
         JSONObject jsonChild;
         Element element;
         for (Object child : jsonChildren) {

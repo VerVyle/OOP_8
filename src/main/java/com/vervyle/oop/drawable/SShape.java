@@ -1,5 +1,6 @@
 package com.vervyle.oop.drawable;
 
+import com.vervyle.oop.factories.ElementFactory;
 import com.vervyle.oop.utils.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -19,8 +20,13 @@ public abstract class SShape extends Element {
         this.color = color;
     }
 
-    public SShape(JSONObject jsonObject) {
-        load(jsonObject);
+    public SShape(JSONObject jsonObject, ElementFactory elementFactory) {
+        load(jsonObject, elementFactory);
+    }
+
+    @Override
+    public Point2D getCenter() {
+        return center;
     }
 
     @Override
@@ -55,7 +61,10 @@ public abstract class SShape extends Element {
             center = oldCenter;
             return false;
         }
+        stickyObservable.notifyObservers(pane, deltaX, deltaY);
         updateShape(pane);
+        stickyObservable.showLines(pane, getCenter());
+        stickyObserver.changed(pane);
         return true;
     }
 
@@ -75,9 +84,10 @@ public abstract class SShape extends Element {
         show(pane);
         if (isSelected()) {
             select();
-            return;
+        } else {
+            deselect();
         }
-        deselect();
+        stickyObservable.showLines(pane, getCenter());
     }
 
     @Override
@@ -116,7 +126,7 @@ public abstract class SShape extends Element {
     }
 
     @Override
-    public void load(JSONObject jsonObject) {
+    public void load(JSONObject jsonObject, ElementFactory elementFactory) {
         radius = jsonObject.getDouble("radius");
         double b0, b1, b2;
         b0 = jsonObject.getJSONArray("center").getDouble(0);

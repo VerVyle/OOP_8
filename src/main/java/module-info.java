@@ -14,4 +14,5 @@ module com.vervyle.oop {
     exports com.vervyle.oop.drawable.leafs;
     exports com.vervyle.oop.factories;
     exports com.vervyle.oop.utils;
+    exports com.vervyle.oop.drawable.utils;
 }

@@ -15,6 +15,9 @@ import java.util.Objects;
 
 public class ElementFactoryImpl implements ElementFactory {
 
+    public ElementFactoryImpl() {
+    }
+
     @Override
     public Element createElement(Element element) {
         Element elementNew = (Element) element.copy();
@@ -27,16 +30,16 @@ public class ElementFactoryImpl implements ElementFactory {
         Element element = null;
         String type = jsonObject.getString("type");
         if (type.equals(CCircle.class.getSimpleName())) {
-            element = new CCircle(jsonObject);
+            element = new CCircle(jsonObject, this);
         }
         if (type.equals(RegularPolygon.class.getSimpleName())) {
-            element = new RegularPolygon(jsonObject);
+            element = new RegularPolygon(jsonObject, this);
         }
         if (type.equals(SStar.class.getSimpleName())) {
-            element = new SStar(jsonObject);
+            element = new SStar(jsonObject, this);
         }
         if (type.equals(GGroup.class.getSimpleName())) {
-            element = new GGroup(jsonObject);
+            element = new GGroup(jsonObject, this);
         }
         Objects.requireNonNull(element);
         return element;

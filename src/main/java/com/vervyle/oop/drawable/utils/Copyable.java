@@ -1,4 +1,4 @@
-package com.vervyle.oop.utils;
+package com.vervyle.oop.drawable.utils;
 
 public interface Copyable {
 

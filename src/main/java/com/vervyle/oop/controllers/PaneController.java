@@ -27,10 +27,11 @@ public class PaneController {
         this.pane = pane;
         elementFactory = new ElementFactoryImpl();
         elementsContainer = new ElementsContainer();
+
         TreeController treeController = new TreeController(treeView);
         elementsContainer.addListener(treeController);
 
-        treeView.setOnMouseClicked(mouseEvent -> elementsContainer.updateSelection(treeView.getSelectionModel().getSelectedIndices().stream().toList()));
+        treeView.setOnMouseClicked(mouseEvent -> elementsContainer.updateSelection(treeView));
     }
 
     public void addElement(Point2D center, double radius, Color color, ElementType elementType) {
@@ -48,7 +49,7 @@ public class PaneController {
 
     public void deleteElement(Element element) {
         element.hide(pane);
-        elementsContainer.removeElement(element);
+        elementsContainer.removeElement(pane, element);
     }
 
     public void selectAll(Point2D point2D) {
@@ -81,7 +82,7 @@ public class PaneController {
         Element element;
         while (iterator.hasNext()) {
             element = iterator.next();
-            elementsContainer.removeElement(element);
+            elementsContainer.removeElement(pane, element);
         }
         elementsContainer.addElementAsLast(group);
         elementsContainer.deselectAll();
@@ -135,7 +136,7 @@ public class PaneController {
                     elementsContainer.addElementAsLast(child);
                     elementsContainer.selectElement(child);
                 }
-                elementsContainer.removeElement(element);
+                elementsContainer.removeElement(pane, element);
             }
         }
         elementsContainer.notifyListeners();
@@ -161,7 +162,7 @@ public class PaneController {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             str = bufferedReader.readLine();
             jsonContainer = new JSONObject(str);
-            elementsContainer.load(jsonContainer);
+            elementsContainer.load(pane, jsonContainer);
             elementsContainer.update(pane);
         } catch (Exception e) {
             System.out.println("Cannot load from file + " + path + ": " + e.getMessage());
@@ -175,8 +176,12 @@ public class PaneController {
     }
 
     public void deleteAll() {
-        elementsContainer.removeAll();
+        elementsContainer.removeAll(pane);
         elementsContainer.update(pane);
         elementsContainer.notifyListeners();
+    }
+
+    public void stickElements(Point2D bufferSource, Point2D target) {
+        elementsContainer.stickElements(pane, bufferSource,target);
     }
 }

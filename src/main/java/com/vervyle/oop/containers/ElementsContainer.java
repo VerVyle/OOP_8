@@ -7,6 +7,9 @@ import com.vervyle.oop.factories.ElementFactoryImpl;
 import com.vervyle.oop.utils.Point2D;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
+import javafx.scene.Scene;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,16 +35,18 @@ public class ElementsContainer implements Observable {
         allElements.add(element);
     }
 
-    public void removeElement(Element element) {
+    public void removeElement(Pane pane, Element element) {
         Objects.requireNonNull(element);
         allElements.remove(element);
         selectedElements.remove(element);
+        element.stickyObservable.removeAll(pane);
+        element.stickyObserver.removeAll(pane, element);
     }
 
-    public void removeAll() {
+    public void removeAll(Pane pane) {
         Iterator<Element> iterator = allElements.iterator();
         while (iterator.hasNext()) {
-            removeElement(iterator.next());
+            removeElement(pane, iterator.next());
         }
     }
 
@@ -138,8 +143,8 @@ public class ElementsContainer implements Observable {
                 .put("elements", jsonAllElements);
     }
 
-    public void load(JSONObject jsonContainer) {
-        removeAll();
+    public void load(Pane pane, JSONObject jsonContainer) {
+        removeAll(pane);
         ElementFactory elementFactory = new ElementFactoryImpl();
         JSONArray jsonAllElements = jsonContainer.getJSONArray("elements");
         Iterator<Object> iterator = jsonAllElements.iterator();
@@ -174,7 +179,8 @@ public class ElementsContainer implements Observable {
         listeners.forEach(invalidationListener -> invalidationListener.invalidated(this));
     }
 
-    public void updateSelection(List<Integer> selectedIndices) {
+    public void updateSelection(TreeView<String> treeView) {
+        List<Integer> selectedIndices = treeView.getSelectionModel().getSelectedIndices();
         if (selectedIndices.contains(0)) {
             selectAll();
             return;
@@ -189,10 +195,38 @@ public class ElementsContainer implements Observable {
             } else {
                 deselectElement(element);
             }
-            if (element instanceof GGroup group) {
+            if (element instanceof GGroup group && treeView.getTreeItem(index).expandedProperty().get()) {
+                for (int i = 0; i <= group.getChildren().size(); i++) {
+                    if (selectedIndices.contains(i + index))
+                        selectElement(element);
+                }
                 index += group.getChildren().size();
             }
             index++;
         }
+    }
+
+    public void stickElements(Pane pane, Point2D bufferSource, Point2D target) {
+        Iterator<Element> iterator = allElements.descendingIterator();
+        Element source = null;
+        while (iterator.hasNext()) {
+            source = iterator.next();
+            if (source.intersects(bufferSource))
+                break;
+        }
+        if (source == null) throw new RuntimeException();
+        Element tar = null;
+        iterator = allElements.descendingIterator();
+        while (iterator.hasNext()) {
+            tar = iterator.next();
+            if (tar.intersects(target) && !source.stickyObservable.isObserver(tar))
+                break;
+        }
+        Objects.requireNonNull(tar);
+        if (source == tar || !tar.intersects(target) || source.stickyObservable.isObserver(tar))
+            return;
+        source.stickyObservable.addListener(tar);
+        tar.stickyObserver.addParent(source);
+        source.updateShape(pane);
     }
 }

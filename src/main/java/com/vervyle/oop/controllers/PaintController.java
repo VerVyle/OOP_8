@@ -4,11 +4,14 @@ import com.vervyle.oop.PaintApplication;
 import com.vervyle.oop.utils.ElementType;
 import com.vervyle.oop.utils.Point2D;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -117,12 +120,17 @@ public class PaintController implements Initializable {
         paneController.colorizeSelected(toolColor.getValue());
     }
 
+    Point2D bufferSource = null;
+    boolean dragEntered = false;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         initList();
         initTree();
         paneController = new PaneController(mainDrawPane, treeView);
         mainDrawPane.setOnMouseClicked(mouseEvent -> {
+            dragEntered = false;
+            bufferSource = null;
             if (!mouseEvent.getButton().equals(MouseButton.PRIMARY))
                 return;
             Point2D center = new Point2D(mouseEvent.getX(), mouseEvent.getY());
@@ -140,6 +148,23 @@ public class PaintController implements Initializable {
             Color color = toolColor.getValue();
             ElementType elementType = toolElements.getSelectionModel().getSelectedItem();
             paneController.addElement(center, radius, color, elementType);
+        });
+        mainDrawPane.setOnMousePressed(mouseDragEvent -> {
+            double x = mouseDragEvent.getX(), y = mouseDragEvent.getY();
+            Point2D point2D = new Point2D(x, y);
+            if (paneController.anyCollision(point2D)) {
+                bufferSource = point2D;
+            }
+        });
+        mainDrawPane.setOnMouseReleased(mouseDragEvent -> {
+            if (!dragEntered || bufferSource == null)
+                return;
+            double x = mouseDragEvent.getX(), y = mouseDragEvent.getY();
+            Point2D target = new Point2D(x, y);
+            paneController.stickElements(bufferSource, target);
+        });
+        mainDrawPane.setOnMouseDragged(mouseEvent -> {
+            dragEntered = true;
         });
         mainScrollPane.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()) {

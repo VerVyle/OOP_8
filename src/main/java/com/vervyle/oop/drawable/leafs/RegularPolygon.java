@@ -1,6 +1,7 @@
 package com.vervyle.oop.drawable.leafs;
 
-import com.vervyle.oop.utils.Copyable;
+import com.vervyle.oop.factories.ElementFactory;
+import com.vervyle.oop.drawable.utils.Copyable;
 import com.vervyle.oop.drawable.PPolygon;
 import com.vervyle.oop.utils.Point2D;
 import javafx.scene.paint.Color;
@@ -17,10 +18,8 @@ public class RegularPolygon extends PPolygon {
         createShape();
     }
 
-    public RegularPolygon(JSONObject jsonObject) {
-        super(jsonObject);
-        createShape();
-        deselect();
+    public RegularPolygon(JSONObject jsonObject, ElementFactory elementFactory) {
+        super(jsonObject, elementFactory);
     }
 
     @Override
@@ -48,8 +47,8 @@ public class RegularPolygon extends PPolygon {
     }
 
     @Override
-    public void load(JSONObject jsonObject) {
-        super.load(jsonObject);
+    public void load(JSONObject jsonObject, ElementFactory elementFactory) {
+        super.load(jsonObject, elementFactory);
         numOfVertices = jsonObject.getInt("numOfVertices");
     }
 }
