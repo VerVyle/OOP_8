@@ -2,7 +2,6 @@ module com.vervyle.oop {
     requires javafx.controls;
     requires javafx.fxml;
     requires org.json;
-    requires kotlin.stdlib;
 
 
     opens com.vervyle.oop to javafx.fxml;

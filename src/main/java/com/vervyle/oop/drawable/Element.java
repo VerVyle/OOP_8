@@ -6,13 +6,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import org.json.JSONObject;
 
-import java.lang.reflect.Method;
-
 public abstract class Element implements Copyable, Savable, Loadable {
 
     protected boolean selected;
-    public StickyObservable stickyObservable;
-    public StickyObserver stickyObserver;
+    public final StickyObservable stickyObservable;
+    public final StickyObserver stickyObserver;
 
     public Element() {
         selected = false;

@@ -10,8 +10,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class StickyObservable {
-    List<Element> observers;
-    List<Shape> lines;
+    final List<Element> observers;
+    final List<Shape> lines;
 
     public StickyObservable() {
         observers = new LinkedList<>();

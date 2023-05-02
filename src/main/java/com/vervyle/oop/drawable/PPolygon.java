@@ -9,7 +9,7 @@ import org.json.JSONObject;
 public abstract class PPolygon extends SShape {
 
     protected double[] vertices;
-    protected VerticesHelper verticesHelper;
+    protected final VerticesHelper verticesHelper;
 
     public PPolygon(double radius, Point2D center, Color color) {
         super(radius, center, color);

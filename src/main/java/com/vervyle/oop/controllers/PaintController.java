@@ -3,17 +3,12 @@ package com.vervyle.oop.controllers;
 import com.vervyle.oop.PaintApplication;
 import com.vervyle.oop.utils.ElementType;
 import com.vervyle.oop.utils.Point2D;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -163,9 +158,7 @@ public class PaintController implements Initializable {
             Point2D target = new Point2D(x, y);
             paneController.stickElements(bufferSource, target);
         });
-        mainDrawPane.setOnMouseDragged(mouseEvent -> {
-            dragEntered = true;
-        });
+        mainDrawPane.setOnMouseDragged(mouseEvent -> dragEntered = true);
         mainScrollPane.setOnKeyPressed(keyEvent -> {
             switch (keyEvent.getCode()) {
                 case DELETE -> paneController.deleteSelected();

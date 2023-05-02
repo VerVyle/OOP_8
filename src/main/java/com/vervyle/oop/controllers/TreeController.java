@@ -25,10 +25,9 @@ public class TreeController implements InvalidationListener {
         TreeItem<String> node = new TreeItem<>(element.getClass().getSimpleName());
         node.setExpanded(true);
         parentNode.getChildren().add(node);
-        if (!(element instanceof GGroup)) {
+        if (!(element instanceof GGroup group)) {
             return;
         }
-        GGroup group = (GGroup) element;
         Element child;
         Iterator<Element> iterator = group.getChildren().iterator();
         while (iterator.hasNext()) {
@@ -42,10 +41,9 @@ public class TreeController implements InvalidationListener {
             treeView.getSelectionModel().select(index);
         }
         index++;
-        if (!(element instanceof GGroup)) {
+        if (!(element instanceof GGroup group)) {
             return;
         }
-        GGroup group = (GGroup) element;
         Element child;
         Iterator<Element> iterator = group.getChildren().iterator();
         while (iterator.hasNext()) {

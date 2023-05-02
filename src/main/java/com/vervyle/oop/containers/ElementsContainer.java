@@ -7,8 +7,6 @@ import com.vervyle.oop.factories.ElementFactoryImpl;
 import com.vervyle.oop.utils.Point2D;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
-import javafx.scene.Scene;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
 import org.json.JSONArray;

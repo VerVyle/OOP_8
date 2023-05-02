@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class StickyObserver {
-    private List<Element> parents;
+    private final List<Element> parents;
 
     public StickyObserver() {
         parents = new LinkedList<>();
